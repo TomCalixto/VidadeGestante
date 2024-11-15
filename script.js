@@ -24,6 +24,13 @@ let startTime = null;
 document.addEventListener("DOMContentLoaded", () => {
     loadContractions(); // Carregar histórico de contrações ao abrir
     console.log("Contractions loaded", contractions); // Log para verificar se as contrações estão sendo carregadas
+
+    // Adicionando event listeners
+    const startButton = document.getElementById("start-btn");
+    const endButton = document.getElementById("end-btn");
+
+    startButton.addEventListener("click", startContraction);
+    endButton.addEventListener("click", endContraction);
 });
 
 function startContraction() {
