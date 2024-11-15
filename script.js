@@ -128,13 +128,6 @@ function loadContractions() {
     }
 }
 
-function clearContractions() {
-    localStorage.removeItem("contractions");
-    contractions = [];
-    displayContractions();
-    console.log("Histórico limpo");
-}
-
 function formatDate(date) {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
