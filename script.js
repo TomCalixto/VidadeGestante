@@ -13,9 +13,9 @@ const firebaseConfig = {
     measurementId: "G-J3LTZLML9K"
   };
 
-// Inicializando o Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+// Inicializa o Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 
 // Variáveis globais
 let contractions = [];
