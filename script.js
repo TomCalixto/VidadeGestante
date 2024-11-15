@@ -128,13 +128,14 @@ const firebaseConfig = {
   projectId: "vida-de-gestante",
   storageBucket: "vida-de-gestante.firebasestorage.app",
   messagingSenderId: "442794310384",
-  appId: "1:442794310384:web:07a82af6d0f8b731386035",
-  measurementId: "G-591LX46KLW"
+  appId: "1:442794310384:web:b9de65e5d28508cf386035",
+  measurementId: "G-J3LTZLML9K"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+
 
 // Função para criar um novo usuário
 function createAccount(email, password) {
