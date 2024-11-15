@@ -3,47 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vida de Gestante - Registro de Contrações</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Registro de Contrações</title>
+    <link rel="stylesheet" href="./style.css"> <!-- Caminho relativo -->
 </head>
 <body>
     <div id="app">
         <h1>Registro de Contrações</h1>
 
-        <!-- Tela de Login -->
-        <div id="login-screen">
-            <h2>Login</h2>
-            <form id="login-form">
-                <label for="email">Email</label>
-                <input type="email" id="email" required>
-
-                <label for="password">Senha</label>
-                <input type="password" id="password" required>
-
-                <button type="submit">Entrar</button>
-            </form>
-            <div id="login-error-message"></div>
+        <div id="controls">
+            <button onclick="startContraction()">Iniciar Contração</button>
+            <button onclick="endContraction()">Finalizar Contração</button>
         </div>
 
-        <!-- Tela de Registro de Contrações -->
-        <div id="contraction-screen" style="display:none;">
-            <div id="controls">
-                <button id="start-btn">Iniciar Contração</button>
-                <button id="end-btn" style="display:none;">Finalizar Contração</button>
-            </div>
+        <h2>Histórico de Contrações</h2>
+        <ul id="contractions-list"></ul>
 
-            <h2>Histórico de Contrações</h2>
-            <ul id="contractions-list"></ul>
-        </div>
-
+        <button onclick="clearContractions()">Limpar Registros</button> <!-- Novo botão para limpar -->
     </div>
 
-    <!-- Script para Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore.js"></script>
-
-    <!-- Carregar o script principal como um módulo -->
-    <script src="script.js" type="module"></script>
+    <!-- Carregar o script depois do conteúdo HTML -->
+    <script src="./script.js"></script> <!-- Caminho relativo -->
 </body>
 </html>
