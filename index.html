@@ -1,53 +1,45 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Contrações</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Vida de Gestante</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
     <!-- Tela de Login -->
     <div id="login-container">
         <h2>Login</h2>
         <form id="login-form">
-            <input type="email" id="email" placeholder="Digite seu e-mail" required>
-            <input type="password" id="password" placeholder="Digite sua senha" required>
+            <input type="email" id="email" placeholder="Digite seu e-mail" required />
+            <input type="password" id="password" placeholder="Digite sua senha" required />
             <button type="submit">Entrar</button>
         </form>
-        <p>Não tem uma conta? <a href="#" id="signup-link">Cadastrar</a></p>
+        <p>Não tem uma conta? <a href="#" id="signup-link">Cadastre-se</a></p>
     </div>
 
     <!-- Tela de Cadastro -->
     <div id="signup-container" style="display:none;">
-        <h2>Cadastrar</h2>
+        <h2>Cadastro</h2>
         <form id="signup-form">
-            <input type="email" id="signup-email" placeholder="Digite seu e-mail" required>
-            <input type="password" id="signup-password" placeholder="Digite sua senha" required>
+            <input type="email" id="signup-email" placeholder="Digite seu e-mail" required />
+            <input type="password" id="signup-password" placeholder="Digite sua senha" required />
             <button type="submit">Cadastrar</button>
         </form>
-        <p>Já tem uma conta? <a href="#" id="login-link">Entrar</a></p>
+        <p>Já tem uma conta? <a href="#" id="login-link">Login</a></p>
     </div>
 
-    <!-- Tela de Registro de Contrações -->
+    <!-- Tela Principal (aparece após login) -->
     <div id="app" style="display:none;">
-        <h1>Registro de Contrações</h1>
-
-        <div id="controls">
-            <button onclick="startContraction()">Iniciar Contração</button>
-            <button onclick="endContraction()">Finalizar Contração</button>
-        </div>
-
-        <h2>Histórico de Contrações</h2>
-        <ul id="contractions-list"></ul>
-
+        <h2>Registros de Contrações</h2>
+        <button onclick="startContraction()">Iniciar Contração</button>
+        <button onclick="endContraction()">Finalizar Contração</button>
         <button onclick="logout()">Sair</button>
+        <ul id="contractions-list"></ul>
     </div>
 
-    <!-- Carregar o script depois do conteúdo HTML -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-    <script src="script.js"></script>
+    <!-- Incluir o JavaScript com o atributo type="module" -->
+    <script type="module" src="script.js"></script>
 </body>
 </html>
