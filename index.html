@@ -23,5 +23,15 @@
 
     <!-- Carregar o script depois do conteúdo HTML -->
     <script src="./script.js"></script> <!-- Caminho relativo -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>    
+
+    <div id="auth">
+        <button onclick="login('email@example.com', 'senha123')">Login</button>
+        <button onclick="createAccount('email@example.com', 'senha123')">Criar Conta</button>
+        <button onclick="logout()">Logout</button>
+    </div>
+    
 </body>
 </html>
