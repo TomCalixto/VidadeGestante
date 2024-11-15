@@ -1,7 +1,7 @@
 // Configuração do Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 // Configuração do Firebase
 const firebaseConfig = {
@@ -28,6 +28,7 @@ const loginScreen = document.getElementById("login-screen");
 const contractionsScreen = document.getElementById("contractions-screen");
 const startButton = document.getElementById("start-button");
 const endButton = document.getElementById("end-button");
+const logoutButton = document.getElementById("logout-button");
 
 // Função para login com Google
 function loginWithGoogle() {
@@ -163,3 +164,8 @@ function logout() {
         console.error("Erro ao deslogar: ", error);
     });
 }
+
+// Atribuindo funções aos botões
+startButton.addEventListener('click', startContraction);
+endButton.addEventListener('click', endContraction);
+logoutButton.addEventListener('click', logout);
