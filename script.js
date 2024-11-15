@@ -1,11 +1,8 @@
 let contractions = [];
 let startTime = null;
-let timerInterval = null;
 
 document.addEventListener("DOMContentLoaded", () => {
-    loadContractions();
-    console.log("Contractions loaded", contractions);
-    updateButtonVisibility();
+    loadContractions(); // Carregar histórico de contrações ao abrir
 });
 
 function startContraction() {
@@ -14,10 +11,7 @@ function startContraction() {
         return;
     }
     startTime = new Date();
-    console.log("Contração iniciada em:", startTime);
-    showTimerBar();
-    startTimer();
-    updateButtonVisibility(); // Atualiza a visibilidade dos botões
+    alert("Contração iniciada!");
 }
 
 function endContraction() {
@@ -26,51 +20,17 @@ function endContraction() {
         return;
     }
     const endTime = new Date();
-    const duration = (endTime - startTime) / 1000;
+    const duration = (endTime - startTime) / 1000; // em segundos
 
     const lastContraction = contractions[contractions.length - 1];
     const interval = lastContraction ? (startTime - lastContraction.startTime) / 1000 : 0;
 
     const newContraction = { startTime, endTime, duration, interval };
-    contractions.push(newContraction);
-
-    console.log("Nova contração registrada:", newContraction);
+    contractions.push(newContraction); // Adiciona a contração ao histórico
     saveContractions();
     displayContractions();
 
-    resetTimer();
-    hideTimerBar();
-    startTime = null;
-    updateButtonVisibility(); // Atualiza a visibilidade dos botões
-}
-
-function startTimer() {
-    const timerDisplay = document.getElementById("timer-display");
-    const startTimestamp = Date.now();
-
-    timerInterval = setInterval(() => {
-        const elapsedTime = Date.now() - startTimestamp;
-        const hours = String(Math.floor(elapsedTime / (1000 * 60 * 60))).padStart(2, "0");
-        const minutes = String(Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, "0");
-        const seconds = String(Math.floor((elapsedTime % (1000 * 60)) / 1000)).padStart(2, "0");
-        timerDisplay.textContent = `${hours}:${minutes}:${seconds}`;
-    }, 1000);
-}
-
-function resetTimer() {
-    clearInterval(timerInterval);
-    timerInterval = null;
-    document.getElementById("timer-display").textContent = "00:00:00";
-}
-
-function showTimerBar() {
-    const timerBar = document.getElementById("timer-bar");
-    timerBar.style.display = "block";
-}
-
-function hideTimerBar() {
-    const timerBar = document.getElementById("timer-bar");
-    timerBar.style.display = "none";
+    startTime = null; // Reseta o início da contração
 }
 
 function displayContractions() {
@@ -78,7 +38,6 @@ function displayContractions() {
     list.innerHTML = "";
 
     if (contractions.length === 0) {
-        console.log("Nenhuma contração registrada.");
         return;
     }
 
@@ -107,8 +66,11 @@ function displayContractions() {
 
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Excluir";
-        deleteButton.className = "delete-button";
-        deleteButton.onclick = () => deleteContraction(index);
+        deleteButton.onclick = () => {
+            contractions.splice(index, 1);
+            saveContractions();
+            displayContractions();
+        };
 
         li.appendChild(header);
         li.appendChild(dataHoraField);
@@ -119,15 +81,8 @@ function displayContractions() {
     });
 }
 
-function deleteContraction(index) {
-    contractions.splice(index, 1);
-    saveContractions();
-    displayContractions();
-}
-
 function saveContractions() {
     localStorage.setItem("contractions", JSON.stringify(contractions));
-    console.log("Contractions saved to localStorage", contractions);
 }
 
 function loadContractions() {
@@ -139,11 +94,14 @@ function loadContractions() {
             duration: contraction.duration,
             interval: contraction.interval
         }));
-        console.log("Contractions loaded from localStorage", contractions);
         displayContractions();
-    } else {
-        console.log("Nenhuma contração no armazenamento.");
     }
+}
+
+function clearContractions() {
+    contractions = [];
+    localStorage.removeItem("contractions");
+    displayContractions();
 }
 
 function formatDate(date) {
@@ -154,16 +112,4 @@ function formatDate(date) {
     const minutes = String(date.getMinutes()).padStart(2, '0');
     const seconds = String(date.getSeconds()).padStart(2, '0');
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
-}
-
-function updateButtonVisibility() {
-    const startButton = document.querySelector("button[onclick='startContraction()']");
-    const endButton = document.querySelector("button[onclick='endContraction()']");
-    if (startTime) {
-        startButton.style.display = "none";
-        endButton.style.display = "inline-block";
-    } else {
-        startButton.style.display = "inline-block";
-        endButton.style.display = "none";
-    }
 }

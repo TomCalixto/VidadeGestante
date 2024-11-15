@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Contrações</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./style.css"> <!-- Caminho relativo -->
 </head>
 <body>
     <div id="app">
@@ -12,18 +12,16 @@
 
         <div id="controls">
             <button onclick="startContraction()">Iniciar Contração</button>
-        </div>
-
-        <div id="timer-bar" style="display: none;">
-            <h2>Cronômetro em Andamento</h2>
-            <p id="timer-display">00:00:00</p>
             <button onclick="endContraction()">Finalizar Contração</button>
         </div>
 
         <h2>Histórico de Contrações</h2>
         <ul id="contractions-list"></ul>
+
+        <button onclick="clearContractions()">Limpar Registros</button> <!-- Novo botão para limpar -->
     </div>
 
-    <script src="script.js"></script>
+    <!-- Carregar o script depois do conteúdo HTML -->
+    <script src="./script.js"></script> <!-- Caminho relativo -->
 </body>
 </html>
