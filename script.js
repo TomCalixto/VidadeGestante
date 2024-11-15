@@ -1,7 +1,7 @@
-// Importando o Firebase utilizando ES6 Modules
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
-import { getFirestore, setDoc, doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+// Configuração do Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 // Configuração do Firebase
 const firebaseConfig = {
@@ -14,113 +14,60 @@ const firebaseConfig = {
     measurementId: "G-J3LTZLML9K"
   };
 
-// Inicializando o Firebase
+// Inicializa o Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+const auth = getAuth();
 const db = getFirestore(app);
 
-// Pegando os elementos HTML
-const loginContainer = document.getElementById("login-container");
-const signupContainer = document.getElementById("signup-container");
-const appContainer = document.getElementById("app");
-
-const loginForm = document.getElementById("login-form");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-
-const signupForm = document.getElementById("signup-form");
-const signupEmailInput = document.getElementById("signup-email");
-const signupPasswordInput = document.getElementById("signup-password");
-
-let contractions = [];
+// Variáveis globais
 let startTime = null;
+let contractions = [];
 
-// Alternar entre telas de login e cadastro
-document.getElementById("login-link").addEventListener("click", () => {
-    loginContainer.style.display = "block";
-    signupContainer.style.display = "none";
-});
+// Referências para os elementos HTML
+const loginScreen = document.getElementById("login-screen");
+const contractionsScreen = document.getElementById("contractions-screen");
+const startButton = document.getElementById("start-button");
+const endButton = document.getElementById("end-button");
 
-document.getElementById("signup-link").addEventListener("click", () => {
-    signupContainer.style.display = "block";
-    loginContainer.style.display = "none";
-});
-
-// Função de login
-loginForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const email = emailInput.value;
-    const password = passwordInput.value;
-
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Login bem-sucedido
-            const user = userCredential.user;
-            loginContainer.style.display = "none";
-            appContainer.style.display = "block";
-            loadContractions();  // Carregar contrações após o login
+// Função para login com Google
+function loginWithGoogle() {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+        .then((result) => {
+            console.log("Usuário logado: ", result.user);
+            loginScreen.style.display = "none";  // Oculta a tela de login
+            contractionsScreen.style.display = "block";  // Exibe a tela de contrações
         })
         .catch((error) => {
-            console.error("Erro ao fazer login", error);
-            alert("Erro ao fazer login: " + error.message);
-        });
-});
-
-// Função de cadastro
-signupForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const email = signupEmailInput.value;
-    const password = signupPasswordInput.value;
-
-    createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            alert("Cadastro realizado com sucesso!");
-            signupContainer.style.display = "none";
-            loginContainer.style.display = "block";
-        })
-        .catch((error) => {
-            console.error("Erro ao cadastrar", error);
-            alert("Erro ao cadastrar: " + error.message);
-        });
-});
-
-// Função de logout
-function logout() {
-    signOut(auth)
-        .then(() => {
-            appContainer.style.display = "none";
-            loginContainer.style.display = "block";
-        })
-        .catch((error) => {
-            console.error("Erro ao sair", error);
+            console.error("Erro ao fazer login com Google: ", error);
         });
 }
 
-// Verificar se o usuário está logado
+// Verificar o estado de autenticação
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        // Usuário logado
-        loginContainer.style.display = "none";
-        appContainer.style.display = "block";
+        console.log("Usuário logado: ", user);
+        loginScreen.style.display = "none";
+        contractionsScreen.style.display = "block";
     } else {
-        // Usuário não logado
-        loginContainer.style.display = "block";
-        appContainer.style.display = "none";
+        console.log("Usuário não autenticado");
+        loginScreen.style.display = "block";
+        contractionsScreen.style.display = "none";
     }
 });
 
-// Funções para registrar contrações
-
+// Função para iniciar a contração
 function startContraction() {
     if (startTime) {
         alert("A contração já foi iniciada!");
         return;
     }
     startTime = new Date();
-    console.log("Contração iniciada em:", startTime); // Log para confirmar que a contração foi iniciada
+    console.log("Contração iniciada em:", startTime);
     alert("Contração iniciada!");
 }
 
+// Função para finalizar a contração
 function endContraction() {
     if (!startTime) {
         alert("Nenhuma contração em andamento.");
@@ -135,13 +82,14 @@ function endContraction() {
     const newContraction = { startTime, endTime, duration, interval };
     contractions.push(newContraction); // Adiciona a contração ao histórico
 
-    console.log("Nova contração registrada:", newContraction); // Log para confirmar que a contração foi salva
+    console.log("Nova contração registrada:", newContraction);
     saveContractions();
     displayContractions();
 
     startTime = null; // Reseta o início da contração
 }
 
+// Função para exibir os registros de contrações
 function displayContractions() {
     const list = document.getElementById("contractions-list");
     list.innerHTML = "";
@@ -182,39 +130,36 @@ function displayContractions() {
     });
 }
 
-function saveContractions() {
-    const user = auth.currentUser;
-    if (user) {
-        setDoc(doc(db, "contractions", user.uid), {
+// Função para salvar as contrações no Firebase
+async function saveContractions() {
+    try {
+        const docRef = await addDoc(collection(db, "contractions"), {
             contractions: contractions
-        })
-        .then(() => {
-            console.log("Contrações salvas com sucesso no Firestore!");
-        })
-        .catch((error) => {
-            console.error("Erro ao salvar as contrações no Firestore:", error);
         });
+        console.log("Contrações salvas com sucesso: ", docRef.id);
+    } catch (e) {
+        console.error("Erro ao salvar as contrações: ", e);
     }
 }
 
-function loadContractions() {
-    const user = auth.currentUser;
-    if (user) {
-        getDoc(doc(db, "contractions", user.uid))
-        .then((docSnapshot) => {
-            if (docSnapshot.exists()) {
-                contractions = docSnapshot.data().contractions || [];
-                displayContractions();
-            } else {
-                console.log("Nenhuma contração encontrada no banco de dados.");
-            }
-        })
-        .catch((error) => {
-            console.error("Erro ao carregar as contrações do Firestore:", error);
-        });
-    }
-}
-
+// Função para formatar as datas
 function formatDate(date) {
-    return new Date(date).toLocaleString();
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+}
+
+// Função de logout
+function logout() {
+    signOut(auth).then(() => {
+        console.log("Usuário deslogado");
+        loginScreen.style.display = "block";
+        contractionsScreen.style.display = "none";
+    }).catch((error) => {
+        console.error("Erro ao deslogar: ", error);
+    });
 }
