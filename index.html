@@ -29,12 +29,12 @@
     </div>
 
     <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js" type="module"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js" type="module"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js" type="module"></script>
-    
-    <!-- Script Customizado -->
     <script type="module">
+        // Importação das bibliotecas Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        
         // Configuração do Firebase
         const firebaseConfig = {
             apiKey: "SUA_API_KEY",
@@ -45,9 +45,10 @@
             appId: "SEU_APP_ID"
         };
 
-        const app = firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+        // Inicializando o Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const db = getFirestore();
 
         let contractions = [];
         let startTime = null;
@@ -57,7 +58,7 @@
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
             
-            auth.signInWithEmailAndPassword(email, password)
+            signInWithEmailAndPassword(auth, email, password)
                 .then(() => {
                     alert("Login realizado com sucesso!");
                     document.getElementById("login").style.display = "none";
@@ -118,7 +119,7 @@
         function saveContractions() {
             const user = auth.currentUser;
             if (user) {
-                db.collection("users").doc(user.uid).set({
+                setDoc(doc(db, "users", user.uid), {
                     contractions: contractions
                 }).then(() => {
                     console.log("Contrações salvas no Firestore");
