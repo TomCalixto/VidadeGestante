@@ -1,9 +1,4 @@
 // Configuração do Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
-// Configuração do Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyDKEF-5qgGEm_e3JtIG9r4AwjH3x5s6o48",
     authDomain: "vida-de-gestante.firebaseapp.com",
@@ -14,61 +9,69 @@ const firebaseConfig = {
     measurementId: "G-J3LTZLML9K"
   };
 
-// Inicializa o Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth();
-const db = getFirestore(app);
+// Inicializar o Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-// Variáveis globais
-let startTime = null;
+// Variáveis de controle de contrações
 let contractions = [];
+let startTime = null;
 
-// Referências para os elementos HTML
-const loginScreen = document.getElementById("login-screen");
-const contractionsScreen = document.getElementById("contractions-screen");
-const startButton = document.getElementById("start-button");
-const endButton = document.getElementById("end-button");
-const logoutButton = document.getElementById("logout-button");
+document.addEventListener("DOMContentLoaded", () => {
+    checkUserLoggedIn();
+});
 
-// Função para login com Google
-function loginWithGoogle() {
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-        .then((result) => {
-            console.log("Usuário logado: ", result.user);
-            loginScreen.style.display = "none";  // Oculta a tela de login
-            contractionsScreen.style.display = "block";  // Exibe a tela de contrações
+function loginWithEmail() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    auth.signInWithEmailAndPassword(email, password)
+        .then(userCredential => {
+            const user = userCredential.user;
+            console.log("Usuário logado: ", user.email);
+            document.getElementById("login-container").style.display = "none";
+            document.getElementById("contracao-container").style.display = "block";
+            loadContractions();
         })
-        .catch((error) => {
-            console.error("Erro ao fazer login com Google: ", error);
+        .catch(error => {
+            console.error("Erro ao fazer login: ", error);
+            document.getElementById("login-error").style.display = "block";
         });
 }
 
-// Verificar o estado de autenticação
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        console.log("Usuário logado: ", user);
-        loginScreen.style.display = "none";
-        contractionsScreen.style.display = "block";
-    } else {
-        console.log("Usuário não autenticado");
-        loginScreen.style.display = "block";
-        contractionsScreen.style.display = "none";
-    }
-});
+function checkUserLoggedIn() {
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            document.getElementById("login-container").style.display = "none";
+            document.getElementById("contracao-container").style.display = "block";
+            loadContractions();
+        } else {
+            document.getElementById("login-container").style.display = "block";
+            document.getElementById("contracao-container").style.display = "none";
+        }
+    });
+}
 
-// Função para iniciar a contração
+function logout() {
+    auth.signOut().then(() => {
+        console.log("Usuário deslogado");
+        document.getElementById("login-container").style.display = "block";
+        document.getElementById("contracao-container").style.display = "none";
+    }).catch(error => {
+        console.error("Erro ao deslogar: ", error);
+    });
+}
+
 function startContraction() {
     if (startTime) {
         alert("A contração já foi iniciada!");
         return;
     }
     startTime = new Date();
-    console.log("Contração iniciada em:", startTime);
     alert("Contração iniciada!");
 }
 
-// Função para finalizar a contração
 function endContraction() {
     if (!startTime) {
         alert("Nenhuma contração em andamento.");
@@ -83,14 +86,12 @@ function endContraction() {
     const newContraction = { startTime, endTime, duration, interval };
     contractions.push(newContraction); // Adiciona a contração ao histórico
 
-    console.log("Nova contração registrada:", newContraction);
     saveContractions();
     displayContractions();
 
     startTime = null; // Reseta o início da contração
 }
 
-// Função para exibir os registros de contrações
 function displayContractions() {
     const list = document.getElementById("contractions-list");
     list.innerHTML = "";
@@ -131,19 +132,37 @@ function displayContractions() {
     });
 }
 
-// Função para salvar as contrações no Firebase
-async function saveContractions() {
-    try {
-        const docRef = await addDoc(collection(db, "contractions"), {
+function saveContractions() {
+    const user = auth.currentUser;
+    if (user) {
+        const userId = user.uid;
+        db.collection("users").doc(userId).set({
             contractions: contractions
+        }).then(() => {
+            console.log("Contrações salvas com sucesso!");
+        }).catch((error) => {
+            console.error("Erro ao salvar contrações: ", error);
         });
-        console.log("Contrações salvas com sucesso: ", docRef.id);
-    } catch (e) {
-        console.error("Erro ao salvar as contrações: ", e);
     }
 }
 
-// Função para formatar as datas
+function loadContractions() {
+    const user = auth.currentUser;
+    if (user) {
+        const userId = user.uid;
+        db.collection("users").doc(userId).get().then((doc) => {
+            if (doc.exists) {
+                contractions = doc.data().contractions || [];
+                displayContractions();
+            } else {
+                console.log("Nenhuma contração salva.");
+            }
+        }).catch((error) => {
+            console.error("Erro ao carregar contrações: ", error);
+        });
+    }
+}
+
 function formatDate(date) {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -153,19 +172,3 @@ function formatDate(date) {
     const seconds = String(date.getSeconds()).padStart(2, '0');
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 }
-
-// Função de logout
-function logout() {
-    signOut(auth).then(() => {
-        console.log("Usuário deslogado");
-        loginScreen.style.display = "block";
-        contractionsScreen.style.display = "none";
-    }).catch((error) => {
-        console.error("Erro ao deslogar: ", error);
-    });
-}
-
-// Atribuindo funções aos botões
-startButton.addEventListener('click', startContraction);
-endButton.addEventListener('click', endContraction);
-logoutButton.addEventListener('click', logout);

@@ -4,32 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Contrações</title>
-    <!-- Link para o arquivo CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="app">
-        <!-- Tela de Login -->
-        <div id="login-screen">
-            <h1>Login</h1>
-            <button id="login-button" onclick="loginWithGoogle()">Login com Google</button>
+        <h1>Login</h1>
+        <div id="login-container">
+            <input type="email" id="email" placeholder="E-mail">
+            <input type="password" id="password" placeholder="Senha">
+            <button onclick="loginWithEmail()">Entrar</button>
+            <p id="login-error" style="color: red; display: none;">Erro: E-mail ou senha inválidos</p>
         </div>
 
-        <!-- Tela de Registros de Contrações -->
-        <div id="contractions-screen" style="display: none;">
-            <h1>Registro de Contrações</h1>
+        <div id="contracao-container" style="display: none;">
+            <h2>Registro de Contrações</h2>
 
             <div id="controls">
-                <button id="start-button" onclick="startContraction()">Iniciar Contração</button>
-                <button id="end-button" onclick="endContraction()">Finalizar Contração</button>
+                <button onclick="startContraction()">Iniciar Contração</button>
+                <button onclick="endContraction()">Finalizar Contração</button>
             </div>
 
             <h2>Histórico de Contrações</h2>
             <ul id="contractions-list"></ul>
+            <button onclick="logout()">Sair</button>
         </div>
     </div>
 
-    <!-- Carregar o script JS -->
-    <script type="module" src="script.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+
+    <script src="script.js"></script>
 </body>
 </html>
