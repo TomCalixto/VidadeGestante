@@ -1,5 +1,5 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js';
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js';
 import { getFirestore, collection, addDoc } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore.js';
 
 // Configuração do Firebase
@@ -61,6 +61,10 @@ function startContraction() {
     }
     startTime = new Date();
     alert("Contração iniciada!");
+
+    // Esconde o botão "Iniciar" e exibe o "Finalizar"
+    document.getElementById('start-btn').style.display = 'none';
+    document.getElementById('end-btn').style.display = 'inline-block';
 }
 
 // Função para finalizar a contração
@@ -81,6 +85,10 @@ async function endContraction() {
         contractions.push(newContraction);
         displayContractions();
         startTime = null;
+
+        // Exibe novamente o botão "Iniciar"
+        document.getElementById('start-btn').style.display = 'inline-block';
+        document.getElementById('end-btn').style.display = 'none';
     } catch (error) {
         console.error('Erro ao salvar contração:', error);
     }
