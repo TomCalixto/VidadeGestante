@@ -9,9 +9,28 @@
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
 
-
 </head>
 <body>
+
+    <div id="login-container">
+        <h2>Login</h2>
+        <form id="login-form">
+            <input type="email" id="email" placeholder="Digite seu e-mail" required>
+            <input type="password" id="password" placeholder="Digite sua senha" required>
+            <button type="submit">Entrar</button>
+        </form>
+        <p>Não tem uma conta? <a href="#" id="signup-link">Cadastrar</a></p>
+    </div>
+    
+    <!-- Tela de logout (invisível enquanto o usuário não estiver logado) -->
+    <div id="user-container" style="display:none;">
+        <h2>Bem-vindo, <span id="user-name"></span></h2>
+        <button id="logout-button">Sair</button>
+    </div>
+    
+
+
+
     <div id="app">
         <h1>Registro de Contrações</h1>
 

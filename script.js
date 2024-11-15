@@ -151,3 +151,56 @@ async function saveContractionToFirebase(contraction) {
         console.error("Erro ao adicionar contração ao Firebase: ", e);
     }
 }
+
+
+// Pegue os elementos HTML
+const loginForm = document.getElementById("login-form");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const userContainer = document.getElementById("user-container");
+const userNameSpan = document.getElementById("user-name");
+const logoutButton = document.getElementById("logout-button");
+const loginContainer = document.getElementById("login-container");
+
+// Função para fazer login
+loginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = emailInput.value;
+    const password = passwordInput.value;
+
+    firebase.auth().signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            const user = userCredential.user;
+            userNameSpan.textContent = user.displayName || user.email;
+            userContainer.style.display = "block";
+            loginContainer.style.display = "none";
+        })
+        .catch((error) => {
+            console.error("Erro ao fazer login", error);
+            alert("Erro ao fazer login: " + error.message);
+        });
+});
+
+// Função de logout
+logoutButton.addEventListener("click", () => {
+    firebase.auth().signOut()
+        .then(() => {
+            userContainer.style.display = "none";
+            loginContainer.style.display = "block";
+        })
+        .catch((error) => {
+            console.error("Erro ao sair", error);
+        });
+});
+
+// Verificar o estado de autenticação
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        userNameSpan.textContent = user.displayName || user.email;
+        userContainer.style.display = "block";
+        loginContainer.style.display = "none";
+    } else {
+        userContainer.style.display = "none";
+        loginContainer.style.display = "block";
+    }
+});
