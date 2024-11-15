@@ -4,13 +4,14 @@ import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.c
 
 // Configuração do Firebase
 const firebaseConfig = {
-  apiKey: "SUA_API_KEY",
-  authDomain: "SEU_AUTH_DOMAIN",
-  projectId: "SEU_PROJECT_ID",
-  storageBucket: "SEU_STORAGE_BUCKET",
-  messagingSenderId: "SEU_MESSAGING_SENDER_ID",
-  appId: "SEU_APP_ID"
-};
+    apiKey: "AIzaSyDKEF-5qgGEm_e3JtIG9r4AwjH3x5s6o48",
+    authDomain: "vida-de-gestante.firebaseapp.com",
+    projectId: "vida-de-gestante",
+    storageBucket: "vida-de-gestante.firebasestorage.app",
+    messagingSenderId: "442794310384",
+    appId: "1:442794310384:web:b9de65e5d28508cf386035",
+    measurementId: "G-J3LTZLML9K"
+  };
 
 // Inicializando o Firebase
 const app = initializeApp(firebaseConfig);
