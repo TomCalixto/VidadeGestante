@@ -4,38 +4,140 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Contrações</title>
-    <link rel="stylesheet" href="styles.css">
-    
-    <!-- Importação dos SDKs do Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-
+    <link rel="stylesheet" href="styles.css"> <!-- Verifique se o arquivo está no mesmo diretório -->
 </head>
 <body>
     <div id="app">
-        <h1>Login</h1>
-        <div id="login-container">
-            <input type="email" id="email" placeholder="E-mail">
-            <input type="password" id="password" placeholder="Senha">
-            <button onclick="loginWithEmail()">Entrar</button>
-            <p id="login-error" style="color: red; display: none;">Erro: E-mail ou senha inválidos</p>
+        <h1>Registro de Contrações</h1>
+        
+        <!-- Tela de Login -->
+        <div id="login">
+            <input type="email" id="email" placeholder="Digite seu email">
+            <input type="password" id="password" placeholder="Digite sua senha">
+            <button onclick="login()">Entrar</button>
         </div>
 
-        <div id="contracao-container" style="display: none;">
-            <h2>Registro de Contrações</h2>
-
+        <!-- Tela de Registros de Contrações -->
+        <div id="register" style="display: none;">
             <div id="controls">
                 <button onclick="startContraction()">Iniciar Contração</button>
                 <button onclick="endContraction()">Finalizar Contração</button>
             </div>
-
             <h2>Histórico de Contrações</h2>
             <ul id="contractions-list"></ul>
-            <button onclick="logout()">Sair</button>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js" type="module"></script>
+    
+    <!-- Script Customizado -->
+    <script type="module">
+        // Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "SUA_API_KEY",
+            authDomain: "SEU_AUTH_DOMAIN",
+            projectId: "SEU_PROJECT_ID",
+            storageBucket: "SEU_STORAGE_BUCKET",
+            messagingSenderId: "SEU_MESSAGING_SENDER_ID",
+            appId: "SEU_APP_ID"
+        };
+
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let contractions = [];
+        let startTime = null;
+
+        // Função de Login
+        function login() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    alert("Login realizado com sucesso!");
+                    document.getElementById("login").style.display = "none";
+                    document.getElementById("register").style.display = "block";
+                })
+                .catch((error) => {
+                    alert(error.message);
+                });
+        }
+
+        // Função de iniciar contração
+        function startContraction() {
+            if (startTime) {
+                alert("A contração já foi iniciada!");
+                return;
+            }
+            startTime = new Date();
+            alert("Contração iniciada!");
+        }
+
+        // Função de finalizar contração
+        function endContraction() {
+            if (!startTime) {
+                alert("Nenhuma contração em andamento.");
+                return;
+            }
+            const endTime = new Date();
+            const duration = (endTime - startTime) / 1000; // em segundos
+
+            const newContraction = { startTime, endTime, duration };
+            contractions.push(newContraction); // Adiciona a contração ao histórico
+            saveContractions();
+            displayContractions();
+
+            startTime = null; // Reseta o início da contração
+        }
+
+        // Exibir os registros de contração
+        function displayContractions() {
+            const list = document.getElementById("contractions-list");
+            list.innerHTML = "";
+
+            if (contractions.length === 0) {
+                return;
+            }
+
+            contractions.forEach((contraction, index) => {
+                const li = document.createElement("li");
+                const startFormatted = formatDate(contraction.startTime);
+                const endFormatted = formatDate(contraction.endTime);
+
+                li.innerHTML = `Contração ${index + 1}: Início: ${startFormatted}, Fim: ${endFormatted}, Duração: ${contraction.duration.toFixed(3)} segundos`;
+                list.appendChild(li);
+            });
+        }
+
+        // Salvar os dados das contrações no Firebase
+        function saveContractions() {
+            const user = auth.currentUser;
+            if (user) {
+                db.collection("users").doc(user.uid).set({
+                    contractions: contractions
+                }).then(() => {
+                    console.log("Contrações salvas no Firestore");
+                }).catch((error) => {
+                    console.log("Erro ao salvar contrações:", error);
+                });
+            }
+        }
+
+        // Formatar data para exibição
+        function formatDate(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+            return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+        }
+    </script>
 </body>
 </html>
