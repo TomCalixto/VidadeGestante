@@ -4,13 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Contrações</title>
-    <link rel="stylesheet" href="./style.css"> <!-- Caminho relativo -->
-
-    <!-- Adicionando Firebase ao seu projeto -->
-<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js"></script>
-
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="app">
@@ -24,10 +18,9 @@
         <h2>Histórico de Contrações</h2>
         <ul id="contractions-list"></ul>
 
-        <button onclick="clearContractions()">Limpar Registros</button> <!-- Novo botão para limpar -->
+        <button onclick="clearContractions()">Limpar Histórico</button>
     </div>
 
-    <!-- Carregar o script depois do conteúdo HTML -->
-    <script src="./script.js"></script> <!-- Caminho relativo -->    
+    <script type="module" src="script.js"></script> <!-- Importa script.js como módulo -->
 </body>
 </html>

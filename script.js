@@ -1,8 +1,28 @@
+// Importando os módulos do Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+
+// Configuração do Firebase
+const firebaseConfig = {
+  apiKey: "SUA_API_KEY",
+  authDomain: "SEU_AUTH_DOMAIN",
+  projectId: "SEU_PROJECT_ID",
+  storageBucket: "SEU_STORAGE_BUCKET",
+  messagingSenderId: "SEU_MESSAGING_SENDER_ID",
+  appId: "SEU_APP_ID"
+};
+
+// Inicializando o Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Variáveis globais
 let contractions = [];
 let startTime = null;
 
 document.addEventListener("DOMContentLoaded", () => {
     loadContractions(); // Carregar histórico de contrações ao abrir
+    console.log("Contractions loaded", contractions); // Log para verificar se as contrações estão sendo carregadas
 });
 
 function startContraction() {
@@ -11,6 +31,7 @@ function startContraction() {
         return;
     }
     startTime = new Date();
+    console.log("Contração iniciada em:", startTime); // Log para confirmar que a contração foi iniciada
     alert("Contração iniciada!");
 }
 
@@ -26,10 +47,15 @@ function endContraction() {
     const interval = lastContraction ? (startTime - lastContraction.startTime) / 1000 : 0;
 
     const newContraction = { startTime, endTime, duration, interval };
-    contractions.push(newContraction); // Adiciona a contração ao histórico
-    saveContractions();
-    displayContractions();
 
+    contractions.push(newContraction); // Adiciona a contração ao histórico
+    console.log("Nova contração registrada:", newContraction); // Log para confirmar que a contração foi salva
+    
+    // Salva no Firestore
+    saveContractionToFirebase(newContraction);
+
+    // Atualiza a interface
+    displayContractions();
     startTime = null; // Reseta o início da contração
 }
 
@@ -38,6 +64,7 @@ function displayContractions() {
     list.innerHTML = "";
 
     if (contractions.length === 0) {
+        console.log("Nenhuma contração registrada.");
         return;
     }
 
@@ -64,25 +91,17 @@ function displayContractions() {
         const interval = contraction.interval !== null && !isNaN(contraction.interval) ? contraction.interval.toFixed(3) : "0";
         intervalField.innerHTML = `<span class="label">Intervalo:</span> ${interval} segundos`;
 
-        const deleteButton = document.createElement("button");
-        deleteButton.textContent = "Excluir";
-        deleteButton.onclick = () => {
-            contractions.splice(index, 1);
-            saveContractions();
-            displayContractions();
-        };
-
         li.appendChild(header);
         li.appendChild(dataHoraField);
         li.appendChild(durationField);
         li.appendChild(intervalField);
-        li.appendChild(deleteButton);
         list.appendChild(li);
     });
 }
 
 function saveContractions() {
     localStorage.setItem("contractions", JSON.stringify(contractions));
+    console.log("Contractions saved to localStorage", contractions); // Log para verificar se os dados estão sendo salvos corretamente
 }
 
 function loadContractions() {
@@ -94,14 +113,18 @@ function loadContractions() {
             duration: contraction.duration,
             interval: contraction.interval
         }));
+        console.log("Contractions loaded from localStorage", contractions); // Log para verificar se o carregamento está correto
         displayContractions();
+    } else {
+        console.log("Nenhuma contração no armazenamento.");
     }
 }
 
 function clearContractions() {
-    contractions = [];
     localStorage.removeItem("contractions");
+    contractions = [];
     displayContractions();
+    console.log("Histórico limpo");
 }
 
 function formatDate(date) {
@@ -114,3 +137,16 @@ function formatDate(date) {
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 }
 
+async function saveContractionToFirebase(contraction) {
+    try {
+        const docRef = await addDoc(collection(db, "contractions"), {
+            startTime: contraction.startTime,
+            endTime: contraction.endTime,
+            duration: contraction.duration,
+            interval: contraction.interval
+        });
+        console.log("Contração salva no Firebase com ID: ", docRef.id);
+    } catch (e) {
+        console.error("Erro ao adicionar contração ao Firebase: ", e);
+    }
+}
