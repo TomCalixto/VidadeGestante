@@ -161,3 +161,85 @@ function navigateTo(screenId) {
 document.addEventListener("DOMContentLoaded", () => {
     navigateTo('contractions');
 });
+
+let events = [];
+
+// Carregar eventos salvos ao iniciar a página
+document.addEventListener("DOMContentLoaded", () => {
+    loadEvents();
+    displayEvents();
+});
+
+function showAddEventForm() {
+    document.getElementById('add-event-form').style.display = 'block';
+}
+
+function cancelAddEvent() {
+    document.getElementById('add-event-form').style.display = 'none';
+}
+
+function addEvent() {
+    const title = document.getElementById('event-title').value;
+    const time = document.getElementById('event-time').value;
+
+    if (!title || !time) {
+        alert("Por favor, preencha todos os campos!");
+        return;
+    }
+
+    const newEvent = { title, time: new Date(time) };
+    events.push(newEvent);
+    saveEvents();
+    displayEvents();
+    cancelAddEvent();
+}
+
+function displayEvents() {
+    const list = document.getElementById('agenda-list');
+    list.innerHTML = "";
+
+    if (events.length === 0) {
+        list.innerHTML = "<li>Sem eventos para exibir.</li>";
+        return;
+    }
+
+    // Ordena os eventos pela data/hora
+    events.sort((a, b) => a.time - b.time);
+
+    events.forEach((event, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+            <strong>${event.title}</strong><br>
+            <em>${formatDate(event.time)}</em>
+            <button onclick="deleteEvent(${index})">Excluir</button>
+        `;
+        list.appendChild(li);
+    });
+}
+
+function deleteEvent(index) {
+    events.splice(index, 1);
+    saveEvents();
+    displayEvents();
+}
+
+function saveEvents() {
+    localStorage.setItem("events", JSON.stringify(events));
+}
+
+function loadEvents() {
+    const savedEvents = localStorage.getItem("events");
+    if (savedEvents) {
+        events = JSON.parse(savedEvents).map(event => ({
+            title: event.title,
+            time: new Date(event.time)
+        }));
+    }
+}
+
+function formatDate(date) {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}

@@ -35,9 +35,24 @@
 
     <!-- Tela de Minha Agenda -->
     <section id="agenda" class="screen" style="display: none;">
-        <h1>Minha Agenda</h1>
-        <p>Em breve você poderá organizar sua agenda aqui!</p>
-    </section>
+
+        <div id="agenda-controls">
+            <button onclick="showAddEventForm()">Adicionar Evento</button>
+        </div>
+    
+        <div id="add-event-form" style="display:none;">
+            <input type="text" id="event-title" placeholder="Título do Evento" />
+            <input type="datetime-local" id="event-time" />
+            <button onclick="addEvent()">Salvar Evento</button>
+            <button onclick="cancelAddEvent()">Cancelar</button>
+        </div>
+    
+        <h2>Eventos</h2>
+        <ul id="agenda-list"></ul>
+    </div>
+    
+
+
 
     <!-- Carregar o script depois do conteúdo HTML -->
     <script src="./script.js"></script> <!-- Caminho relativo -->
