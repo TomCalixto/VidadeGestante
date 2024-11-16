@@ -1,5 +1,6 @@
 let contractions = [];
 let startTime = null;
+let timerInterval = null;
 
 document.addEventListener("DOMContentLoaded", () => {
     loadContractions(); // Carregar histórico de contrações ao abrir
@@ -12,6 +13,14 @@ function startContraction() {
     }
     startTime = new Date();
     alert("Contração iniciada!");
+
+    // Mostrar o cronômetro e ocultar o botão de iniciar
+    document.getElementById("start-button").style.display = "none";
+    document.getElementById("end-button").style.display = "block";
+    document.getElementById("countdown").style.display = "block";
+
+    // Iniciar o cronômetro
+    startTimer();
 }
 
 function endContraction() {
@@ -30,7 +39,31 @@ function endContraction() {
     saveContractions();
     displayContractions();
 
-    startTime = null; // Reseta o início da contração
+    // Resetar cronômetro e botões
+    stopTimer();
+    startTime = null;
+    document.getElementById("start-button").style.display = "block";
+    document.getElementById("end-button").style.display = "none";
+    document.getElementById("countdown").style.display = "none";
+}
+
+function startTimer() {
+    const timerElement = document.getElementById("timer");
+    let elapsedSeconds = 0;
+
+    timerInterval = setInterval(() => {
+        elapsedSeconds++;
+        const hours = String(Math.floor(elapsedSeconds / 3600)).padStart(2, '0');
+        const minutes = String(Math.floor((elapsedSeconds % 3600) / 60)).padStart(2, '0');
+        const seconds = String(elapsedSeconds % 60).padStart(2, '0');
+        timerElement.textContent = `${hours}:${minutes}:${seconds}`;
+    }, 1000);
+}
+
+function stopTimer() {
+    clearInterval(timerInterval);
+    document.getElementById("timer").textContent = "00:00:00"; // Resetar cronômetro
+    timerInterval = null;
 }
 
 function displayContractions() {
