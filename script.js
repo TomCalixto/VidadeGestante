@@ -12,7 +12,6 @@ function startContraction() {
         return;
     }
     startTime = new Date();
-    alert("Contração iniciada!");
 
     // Mostrar o cronômetro e ocultar o botão de iniciar
     document.getElementById("start-button").style.display = "none";
