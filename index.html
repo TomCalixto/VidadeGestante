@@ -3,34 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Contrações</title>
+    <title>APP Vida de Gestante</title>
     <link rel="stylesheet" href="./style.css"> <!-- Caminho relativo -->
 </head>
 <body>
-    <div id="app">
-        <h1>Registro de Contrações</h1>
-
-        <!-- Controles para iniciar e finalizar contrações -->
-        <div id="controls">
-            <button id="start-button" onclick="startContraction()">Iniciar Contração</button>
-            <button id="end-button" onclick="endContraction()" style="display: none;">Finalizar Contração</button>
-        </div>
-
-        <!-- Exibição do cronômetro -->
-        <div id="countdown" style="display: none;">
-            Tempo: <span id="timer">00:00:00</span>
-        </div>
-
-        <!-- Histórico de contrações -->
-        <h2>Histórico de Contrações</h2>
-        <ul id="contractions-list"></ul>
-
-        <!-- Botão para limpar registros -->
-        <button onclick="clearContractions()">Limpar Registros</button>
+    <!-- Menu de navegação -->
+    <div id="menu">
+        <button onclick="navigateTo('contractions')">Contrações</button>
+        <button onclick="navigateTo('agenda')">Minha Agenda</button>
     </div>
+
+    <!-- Tela de Contrações -->
+    <section id="contractions" class="screen">
+        <div id="app">
+            <h1>Registro de Contrações</h1>
+
+            <div id="controls">
+                <button id="start-button" onclick="startContraction()">Iniciar Contração</button>
+                <button id="end-button" style="display:none;" onclick="endContraction()">Finalizar Contração</button>
+            </div>
+
+            <div id="countdown" style="display:none;">
+                <span id="timer">00:00:00</span>
+            </div>
+
+            <h2>Histórico de Contrações</h2>
+            <ul id="contractions-list"></ul>
+
+            <button onclick="clearContractions()">Limpar Registros</button> <!-- Novo botão para limpar -->
+        </div>
+    </section>
+
+    <!-- Tela de Minha Agenda -->
+    <section id="agenda" class="screen" style="display: none;">
+        <h1>Minha Agenda</h1>
+        <p>Em breve você poderá organizar sua agenda aqui!</p>
+    </section>
 
     <!-- Carregar o script depois do conteúdo HTML -->
     <script src="./script.js"></script> <!-- Caminho relativo -->
 </body>
 </html>
-

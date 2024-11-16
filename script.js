@@ -145,3 +145,19 @@ function formatDate(date) {
     const seconds = String(date.getSeconds()).padStart(2, '0');
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 }
+
+// Função para alternar entre as telas
+function navigateTo(screenId) {
+    const screens = document.querySelectorAll(".screen");
+    screens.forEach(screen => {
+        screen.style.display = "none"; // Oculta todas as telas
+    });
+
+    const targetScreen = document.getElementById(screenId);
+    targetScreen.style.display = "block"; // Mostra a tela desejada
+}
+
+// Inicializa com a tela de Contrações ativa
+document.addEventListener("DOMContentLoaded", () => {
+    navigateTo('contractions');
+});
