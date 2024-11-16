@@ -1,3 +1,56 @@
+/* Adicionar o menu fixo antes do estilo do corpo ou logo após o estilo do corpo */
+
+#menu {
+    position: fixed; /* Fixa o menu na parte superior da tela */
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #007bff;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    z-index: 1000; /* Garante que o menu fique acima do conteúdo */
+}
+
+#menu button {
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0 10px;
+}
+
+#menu button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos gerais */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Estilos do conteúdo */
+#app {
+    width: 100%;
+    max-width: 600px;
+    margin: 80px 20px 20px; /* Espaço para o menu fixo */
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
 /* Estilos gerais */
 body {
     font-family: Arial, sans-serif;
