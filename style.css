@@ -127,11 +127,23 @@ button:hover {
     background-color: #0056b3;
 }
 
+/* Estilos dos botões fixos */
 #controls {
+    position: fixed;
+    bottom: 20px;  /* Ajusta a distância da parte inferior da tela */
+    left: 50%;     /* Coloca a posição no centro horizontal da tela */
+    transform: translateX(-50%); /* Ajusta para realmente centralizar */
     display: flex;
-    justify-content: space-between;
+    justify-content: center; /* Garante que os botões fiquem centralizados */
     gap: 10px;
+    z-index: 10; /* Garante que os botões fiquem acima do conteúdo */
 }
+
+button {
+    width: auto; /* Ajusta os botões para que tenham tamanho adequado */
+    padding: 12px 20px; /* Ajuste no tamanho do botão, se necessário */
+}
+
 
 /* Estilos da lista de contrações */
 #contractions-list {
