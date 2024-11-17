@@ -343,3 +343,14 @@ button {
 #agenda-list li button:hover {
     background-color: #c82333;
 }
+
+#vaccine-schedule {
+    padding: 20px;
+    text-align: center;
+}
+
+#vaccine-content {
+    margin-top: 20px;
+    font-size: 16px;
+    color: #333;
+}

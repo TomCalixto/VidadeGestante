@@ -243,3 +243,17 @@ function formatDate(date) {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
 }
+
+function toggleGroup(groupId) {
+            const groupContent = document.getElementById(groupId);
+            if (!groupContent) {
+                console.error(`Elemento com ID "${groupId}" não encontrado.`);
+                return;
+            }
+            // Alternar a visibilidade
+            if (groupContent.style.display === "none" || groupContent.style.display === "") {
+                groupContent.style.display = "block";
+            } else {
+                groupContent.style.display = "none";
+            }
+        }

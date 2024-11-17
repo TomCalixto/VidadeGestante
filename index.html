@@ -11,6 +11,7 @@
     <div id="menu">
         <button onclick="navigateTo('contractions')">Contrações</button>
         <button onclick="navigateTo('agenda')">Minha Agenda</button>
+        <button onclick="navigateTo('vaccine-schedule')">Calendário Vacinal</button>    
     </div>
 
     <!-- Tela de Contrações -->
@@ -29,13 +30,11 @@
 
             <h2>Histórico de Contrações</h2>
             <ul id="contractions-list"></ul>
-
         </div>
     </section>
 
     <!-- Tela de Minha Agenda -->
     <section id="agenda" class="screen" style="display: none;">
-
         <div id="agenda-controls">
             <button onclick="showAddEventForm()">Adicionar Evento</button>
         </div>
@@ -46,13 +45,86 @@
             <button onclick="addEvent()">Salvar Evento</button>
             <button onclick="cancelAddEvent()">Cancelar</button>
         </div>
-    
+        
         <h2>Eventos</h2>
         <ul id="agenda-list"></ul>
+    </section>
+
+<!-- Tela de Calendário Vacinal -->
+<section id="vaccine-schedule" class="screen" style="display: none;">
+    <h2>Calendário Vacinal</h2>
+    <div id="vaccine-content">
+        <p>Clique abaixo no mês que você deseja visualizar as vacinas importantes para o seu bebê:</p>
+        <div class="vaccine-group">
+            <p class="group-title" onclick="toggleGroup('newborn')"><strong>AO NASCER:</strong></p>
+            <div id="newborn" class="group-content" style="display: none;">
+                <p>Vacina BCG (Dose única)</p>
+                <p>Vacina Hepatite B (recombinante HB)</p>
+            </div>
+        </div>
+        <div class="vaccine-group">
+            <p class="group-title" onclick="toggleGroup('2-months')"><strong>2 MESES:</strong></p>
+            <div id="2-months" class="group-content" style="display: none;">
+                <p>Vacina adsorvida Difteria, Tétano, Pertussis, Hepatite B (recombinante) e Haemophilus influenzae B (conjugada) - (Penta) (1ª dose)</p>
+                <p>Vacina poliomielite 1, 2 e 3 (inativada) - (VIP) (1ª dose)</p>
+                <p>Vacina pneumocócica 10-valente (Conjugada) - (Pneumo 10) (1ª dose)</p>
+                <p>Vacina rotavírus humano G1P1 [8] (atenuada) - (VRH) (1ª dose)</p>
+            </div>
+        </div>
+        <div class="vaccine-group">
+            <p class="group-title" onclick="toggleGroup('3-months')"><strong>3 MESES:</strong></p>
+            <div id="3-months" class="group-content" style="display: none;">
+                <p>Vacina meningocócica C (conjugada) - (Meningo C) (1ª dose)</p>
+            </div>
+        </div>
+        <div class="vaccine-group">
+            <p class="group-title" onclick="toggleGroup('4-months')"><strong>4 MESES:</strong></p>
+            <div id="4-months" class="group-content" style="display: none;">
+                <p>Vacina adsorvida Difteria, Tétano, pertussis, Hepatite B (recombinante) e Haemophilus influenzae B (conjugada) - (Penta) (2ª dose)</p>
+                <p>Vacina poliomielite 1, 2 e 3 (inativada) - (VIP) (2ª dose)</p>
+                <p>Vacina pneumocócica 10-valente (Conjugada) - (Pneumo 10) (2ª dose)</p>
+                <p>Vacina rotavírus humano G1P1 [8] (atenuada) - (VRH) (2ª dose)</p>
+            </div>
+        </div>
+        <div class="vaccine-group">
+            <p class="group-title" onclick="toggleGroup('5-months')"><strong>5 MESES:</strong></p>
+            <div id="5-months" class="group-content" style="display: none;">
+                <p>Vacina meningocócica C (conjugada) - (Meningo C) (2ª dose)</p>
+            </div>
+        </div>
+        <div class="vaccine-group">
+            <p class="group-title" onclick="toggleGroup('6-months')"><strong>6 MESES:</strong></p>
+            <div id="6-months class="group-content" style="display: none;">
+                <p>Vacina adsorvida Difteria, Tétano, pertussis, Hepatite B (recombinante) e Haemophilus influenzae B (conjugada) - (Penta) (3ª dose)</p>
+                <p>Vacina poliomielite 1, 2 e 3 (inativada) - (VIP) (3ª dose)</p>
+                <p>Vacina Covid-19 (1ª dose)</p>
+            </div>
+        </div>
+        <div class="vaccine-group">
+            <p class="group-title" onclick="toggleGroup('7-months')"><strong>7 MESES:</strong></p>
+            <div id="7-months" class="group-content" style="display: none;">
+                <p>Vacina Covid-19 (2ª dose)</p>
+            </div>
+        </div>
+        <div class="vaccine-group">
+            <p class="group-title" onclick="toggleGroup('9-months')"><strong>9 MESES:</strong></p>
+            <div id="9-months" class="group-content" style="display: none;">
+                <p>Vacina Febre Amarela (atenuada) - (FA) (1 dose)</p>
+            </div>
+        </div>
+        <div class="vaccine-group">
+            <p class="group-title" onclick="toggleGroup('12-months')"><strong>12 MESES:</strong></p>
+            <div id="12-months" class="group-content" style="display: none;">
+                <p>Vacina pneumocócica 10-valente (Conjugada) - (Pneumo 10) (Reforço)</p>
+                <p>Vacina meningocócica C (conjugada) - (Meningo C) (Reforço)</p>
+                <p>Vacina Sarampo, Caxumba, Rubéola (Tríplice viral) (1ª dose)</p>
+            </div>
+        </div>
+        <p></p>
+        <p><strong>FONTE:</strong></p>
+        <p>https://www.gov.br/saude/pt-br/vacinacao/calendario</p>
     </div>
-    
-
-
+</section>
 
     <!-- Carregar o script depois do conteúdo HTML -->
     <script src="./script.js"></script> <!-- Caminho relativo -->
