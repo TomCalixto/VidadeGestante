@@ -9,10 +9,50 @@
 <body>
     <!-- Menu de navegação -->
     <div id="menu">
-        <button onclick="navigateTo('contractions')">Contrações</button>
         <button onclick="navigateTo('agenda')">Minha Agenda</button>
-        <button onclick="navigateTo('vaccine-schedule')">Calendário Vacinal</button>    
+        <button onclick="navigateTo('contractions')">Contrações</button>
+        <button onclick="navigateTo('vaccine-schedule')">Vacinas</button>    
+        <button id="logout-btn">Sair</button>    
     </div>
+
+<!-- Login-->
+    <!-- Verificação de login -->
+    <script>
+        if (localStorage.getItem('loggedIn') !== 'true') {
+            window.location.href = 'login.html';  // Redireciona se não estiver logado
+        }
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
+
+<script>
+    const logoutBtn = document.getElementById('logout-btn');
+    logoutBtn.addEventListener('click', function () {
+        localStorage.removeItem('loggedIn');  // Remove o login
+        window.location.href = 'login.html';  // Redireciona para o login
+    });
+</script>
+
+<!-- Login-->
+
+
+    <!-- Tela de Minha Agenda -->
+    <section id="agenda" class="screen" style="display: none;">
+        <div id="agenda-controls">
+            <button onclick="showAddEventForm()">Adicionar Evento</button>
+        </div>
+    
+        <div id="add-event-form" style="display:none;">
+            <input type="text" id="event-title" placeholder="Título do Evento" />
+            <input type="datetime-local" id="event-time" />
+            <button onclick="addEvent()">Salvar Evento</button>
+            <button onclick="cancelAddEvent()">Cancelar</button>
+        </div>
+        
+        <h2>Eventos</h2>
+        <ul id="agenda-list"></ul>
+    </section>
 
     <!-- Tela de Contrações -->
     <section id="contractions" class="screen">
@@ -33,28 +73,12 @@
         </div>
     </section>
 
-    <!-- Tela de Minha Agenda -->
-    <section id="agenda" class="screen" style="display: none;">
-        <div id="agenda-controls">
-            <button onclick="showAddEventForm()">Adicionar Evento</button>
-        </div>
-    
-        <div id="add-event-form" style="display:none;">
-            <input type="text" id="event-title" placeholder="Título do Evento" />
-            <input type="datetime-local" id="event-time" />
-            <button onclick="addEvent()">Salvar Evento</button>
-            <button onclick="cancelAddEvent()">Cancelar</button>
-        </div>
-        
-        <h2>Eventos</h2>
-        <ul id="agenda-list"></ul>
-    </section>
-
 <!-- Tela de Calendário Vacinal -->
 <section id="vaccine-schedule" class="screen" style="display: none;">
     <h2>Calendário Vacinal</h2>
     <div id="vaccine-content">
         <p>Clique abaixo no mês que você deseja visualizar as vacinas importantes para o seu bebê:</p>
+        <p>*Calendário de vacinas ofertadas pelo SUS.</p>
         <div class="vaccine-group">
             <p class="group-title" onclick="toggleGroup('newborn')"><strong>AO NASCER:</strong></p>
             <div id="newborn" class="group-content" style="display: none;">
@@ -121,8 +145,7 @@
             </div>
         </div>
         <p></p>
-        <p><strong>FONTE:</strong></p>
-        <p>https://www.gov.br/saude/pt-br/vacinacao/calendario</p>
+        <p>FONTE: https://www.gov.br/saude/pt-br/vacinacao/calendario</p>
     </div>
 </section>
 
